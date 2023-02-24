@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:notificaciones/screens/screens.dart';
+import 'package:notificaciones/services/push_notifications_service.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await PushNotificationService.initializeApp();
+
+  runApp(const MyApp());
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -21,14 +27,14 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    // Context!
-    // PushNotificationService.messagesStream.listen((message) {
-    //   // print('MyApp: $message');
-    //   navigatorKey.currentState?.pushNamed('message', arguments: message);
+    //Context!
+    PushNotificationService.messagesStream.listen((message) {
+      // print('MyApp: $message');
+      navigatorKey.currentState?.pushNamed('message', arguments: message);
 
-    //   final snackBar = SnackBar(content: Text(message));
-    //   messengerKey.currentState?.showSnackBar(snackBar);
-    // });
+      final snackBar = SnackBar(content: Text(message));
+      messengerKey.currentState?.showSnackBar(snackBar);
+    });
   }
 
   @override
@@ -40,8 +46,8 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: navigatorKey, // Navegar
       scaffoldMessengerKey: messengerKey, // Snacks
       routes: {
-        'home': (_) => HomeScreen(),
-        'message': (_) => MessageScreen(),
+        'home': (_) => const HomeScreen(),
+        'message': (_) => const MessageScreen(),
       },
     );
   }
